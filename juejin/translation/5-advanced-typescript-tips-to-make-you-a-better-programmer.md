@@ -2,39 +2,39 @@
 > * 原文作者：[Anthony Oleinik](https://medium.com/@anth-oleinik)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
 > * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md](https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md)
-> * 译者：
+> * 译者：[Usualminds](https://github.com/Usualminds)
 > * 校对者：
 
-# 5 Advanced TypeScript Tips To Make You a Better Programmer
+# 掌握这 5 个 TypeScript 高级技巧，成为更好的开发者
 
 ![Beautiful :)](https://cdn-images-1.medium.com/max/3200/0*RKICUYO863Mu_2mX.png)
 
-Typescript is an amazing language — one that allows us to do everything JavaScript can in a tenth of the debugging time. These tips will mostly be for:
+Typescript 是一门神奇的语言———相比 JavaScript 可以实现的所有功能，它只用十分之一的调试时间就可以完成了，主要包括以下几点：
 
-* reducing bugs, by writing more explicit and understandable code
-* pack more value into your code without reinventing the wheel.
+* 通过编写强类型和可读性更高的代码来减少 bug
+* 代码中可以集成更多有价值的功能，从而避免重复造轮子
 
-Here’s 5 advanced TypeScript tips that will allow you to write better TypeScript Code.
+以下 5 条 TypeScript 的高级使用技巧，可让你写出更好的 TypeScript 代码。
 
-#### 1. The “is” operator / Type Guards
+#### 1. “is” 运算符 / 类型保护
 
-Swagger is really, really helpful to see what the backend is going to serve you — but, more often than not, programmers are given bad or inconsistant API’s to use, where properties may or may not exist or different objects are returned depending on status.
+Swagger 极大地帮助我们了解后端可以提供什么样的服务——但是，通常情况下，开发者往往会得到和约定不一致的 API，其中某些 API 属性可能存在，也可能不存在，或者根据状态返回不同的对象。
 
-Unfortunately, there’s no way to catch these at compile time if you don’t know what might come out of the API, but we can make it easy to handle (and report!) at runtime.
+不好的是，如果你不知道 API 会返回什么结果，就无法在编译时捕获它们，但我们可以做的是，使其在运行时更加易于处理(和上报!)。
 
-API’s are often an entrypoint for errors for typescript — API call results are usually casted like the following:
+API 调用一般是 typescript 类型错误的入口——其结果通常会像下面这样被强制转换:
 
 ```ts
 const myApiResult = await callApi("url.com/endpoint") as IApiResult
 ```
 
-or even worse…
+甚至更糟糕…
 
 ```ts
 const myApiResult = await callApi("url.com/endpoint") as any
 ```
 
-both of these shut the compiler up, but the first is significantly more robust than the second — infact, the second just turns anything you do with the result to JavaScript levels of uncertainty.
+这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高——事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。
 
 But what if the API gives us something that isn’t a `IApiResult` ? What if it returns something different, and now we have a random object type casted as `MyApiResult` ? That would be bad, and would 100% lead to type errors down the line.
 
