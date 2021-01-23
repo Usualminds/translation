@@ -36,9 +36,9 @@ const myApiResult = await callApi("url.com/endpoint") as any
 
 这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高——事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。
 
-But what if the API gives us something that isn’t a `IApiResult` ? What if it returns something different, and now we have a random object type casted as `MyApiResult` ? That would be bad, and would 100% lead to type errors down the line.
+但如果 API 返回的结果不是 `IApiResult` 类型怎么办？其返回值类型和我们期望的不同，我们可以定义一个随机的 `MyApiResult` 类型？其结果显而易见会存在问题，并且会 100% 地导致输入类型错误。
 
-We can utilize TS Type Guards:
+我们可以使用 TS 的类型保护来处理以上问题:
 
 ```ts
 interface IApiResponse { 
@@ -46,7 +46,7 @@ interface IApiResponse {
 }
 
 const callFooApi = async (): Promise<IApiResponse> => {
- let response = await httpRequest('foo.api/barEndpoint') //returns unknown
+ let response = await httpRequest('foo.api/barEndpoint') // 返回值类型未知
  if (responseIsbar(response)) {
    return response
  } else {
@@ -60,15 +60,15 @@ const responseIsBar = (response: unknown): response is IApiResponse => {
 }
 ```
 
-By using `responseIsBar` , we can guarantee that we don't preemptively cast the response to the `IApiResponse` , preventing errors down the line.
+通过 `responseIsBar` 方法，我们可以提前判断返回值类型是否为 ` IApiResponse` ，从而防止出现类型转换错误。
 
-In a realistic use case, you might show the user an error like “Got unexpected response from server, please try again” or something similar, instead of `property 'bar' does not exist` .
+实际使用场景中，你可以提示用户“服务器返回异常，请重试”，或者提示与之类似的错误信息，而不是显示 `属性 'bar' 不存在`。
 
-As a generic explication to the “is” operator: `value is type` is actually a boolean, that when inputting true, tells typescript that value… well, is type.
+ `is` 操作符的一般含义是: `value is type` 实际上是一个布尔值，当输入 true 时，意味着告知 typescript 返回值类型确实是我们期望的类型。
 
 #### 2. As Const / Readonly
 
-This one is a simpler, more syntactic sugar type thing. Most people know that when assigning an interface, you can write “readonly” to make that property immutable.
+这是一个更简洁的类型语法糖。很多人都知道，在给接口赋值时，可以通过 `readonly` 声明使该属性只能被读取而不能被写入
 
 ```ts
 interface MyInterface {
@@ -79,12 +79,12 @@ let t: MyInterface = {
   myProperty: 'hi'
 }
 
-t.myProperty = "bye" //compiler err, saying myProperty is Read Only.
+t.myProperty = "bye" //编译错误, myProperty 是只读属性.
 ```
 
-this is great, until you end up with really big data classes, maybe from API results. Then you have a readonly spam before every single property, just for a simple data class.
+这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。
 
-Typescript supports “as const” after a declaration so that we add readonly to every single property.
+Typescript 支持在类型声明后加上 `as const`，这样我们就可以给每个属性添加 readonly。
 
 ```ts
 let t = {
@@ -93,7 +93,7 @@ let t = {
 } as const 
 ```
 
-Now, every property of T is immutable. for instance, `t.myArr.push(1)` won’t compile, and reassigning `myProperty` similarly won’t compile.
+现在，T 的所有属性值都是不可修改的。例如，`t.myArr.push(1)` 不能编译，给 `myProperty` 属性重新赋值同样也不能编译。
 
 The usecases where I see this being the most helpful is the same as the previous — instead of returning an interface, though, we just want to proxy the object called from the API and change some properties around, making it a data object. So, combining with the previous tip:
 
