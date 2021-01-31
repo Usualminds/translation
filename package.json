@@ -1,0 +1,29 @@
+{
+  "name": "translation",
+  "version": "1.0.0",
+  "description": "translation collection about technical articles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint-md": "lint-md src/README.md",
+    "fix-md": "lint-md src/README.md --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Usualminds/translation.git"
+  },
+  "author": "Joe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Usualminds/translation/issues"
+  },
+  "homepage": "https://github.com/Usualminds/translation#readme",
+  "dependencies": {
+    "lint-md-cli": "^0.1.2"
+  },
+  "lint-staged": {
+    "src/**/*.{md,markdown}": [
+      "lint-md"
+    ]
+  }
+}
