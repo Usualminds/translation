@@ -1,10 +1,14 @@
 {
   "excludeFiles": ['node_modules'],
   "rules": {
-    "no-empty-code": 1,
-    "no-long-code": [2, {
-      "length": 100,
-      "exclude": ["dot"]
-    }]
+    "no-empty-code": 1,          // 删除空的代码块，或者填充代码内容
+    "space-round-alphabet": 2,   // 中文与英文之间需要增加空格
+    "space-round-number": 2,     // 中文与数字之间需要增加空格
+    "no-space-in-link": 2,       // link 内容前后不能有空格
+    "no-space-in-emphasis": 2,   // emphasis 内容前后不能有空格
+    "no-empty-url": 2,           // 链接和图片地址不能为空
+    "no-empty-blockquote":2,     // blockquote 内容不能为空
+    "no-trailing-punctuation": 2,// 标题不能以标点符号结尾
+    "no-long-code": 2,           // 每行代码接受的最大长度，数字，默认值为 100
   }
 }
