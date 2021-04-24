@@ -2,14 +2,14 @@
 > * 原文作者：[Chris Vibert](https://medium.com/@cp.vibert)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
 > * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md](https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md)
-> * 译者：
+> * 译者：[Usualminds](https://github.com/Usualminds)
 > * 校对者：
 
-# Leave JavaScript Aside — Mint Is a Great Language for Building Web Apps
+# 把 JavaScript 放到一边 —— Mint 是一个创建 Web 应用的伟大语言
 
-![Photo by [Luca Volpe](https://unsplash.com/@lucavolpe?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/mint-cocktail?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).](https://cdn-images-1.medium.com/max/13440/1*-AzcPWEeQ7lrNOGm9VWHVA.jpeg)
+![图片由 [Luca Volpe](https://unsplash.com/@lucavolpe?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/mint-cocktail?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)提供。](https://cdn-images-1.medium.com/max/13440/1*-AzcPWEeQ7lrNOGm9VWHVA.jpeg)
 
-Recently, I used [Mint](https://www.mint-lang.com/) to build a small web application, and it was definitely the “refreshing” experience that is advertised. Mint is a relatively unheard-of programming language for building web applications. It’s a typed language, it compiles to JavaScript, and it has many essential features built in.
+最近, 我使用 [Mint](https://www.mint-lang.com/) 构建了一个小型的 web 应用程序, and it was definitely the “refreshing” experience that is advertised. Mint is a relatively unheard-of programming language for building web applications. It’s a typed language, it compiles to JavaScript, and it has many essential features built in.
 
 All of this means that with Mint, you can build web applications **very quickly**.
 
