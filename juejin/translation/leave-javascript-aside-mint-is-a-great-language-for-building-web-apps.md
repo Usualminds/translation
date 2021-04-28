@@ -29,7 +29,7 @@
 
 在[源码](https://github.com/cpv123/github-go-chrome-extension)中，你可以查看更多的有关于扩展的信息，也可以将 Javascript 版本和新的 Mint 版本进行比较。
 
-在我的下一篇文章里，我将会说明如何使用 Mint 来构建一个Chrome 插件。今天，我们主要讲下日常使用 Mint 构建 Web 应用中我比较中意的几个点。
+在我的下一篇文章里，我将会说明如何使用 Mint 来构建一个 Chrome 插件。今天，我们主要讲下日常使用 Mint 构建 Web 应用中我比较中意的几个点。
 
 [Mint 官网](https://www.mint-lang.com/)很友好地展示了 Mint 包含的所有功能。包括来语言特性和 Web 开发框架特点。这里有很多有趣的特性可供选择使用，但是我发现以下两个特性特别棒：
 
@@ -60,7 +60,7 @@ Mint 提供了一套非常简单的全局状态管理方案，相对于 Redux，
 
 ![](https://cdn-images-1.medium.com/max/2516/1*G1HvZDnQy5-DW3BZnlCIPQ.png)
 
-进一步讲，你可以使用组件中的 props 和 状态来进行赋值。下面的例子展示了一个按钮如何根据以下情况进行样式转变：
+进一步讲，你可以使用组件中的 props 和状态来进行赋值。下面的例子展示了一个按钮如何根据以下情况进行样式转变：
 
 1. 应用程序的原始色值，可以在全局的 **theme store** 中配置。
 2. 按钮的 `variant` 属性，可以由 `ButtonVariants` 枚举进行类型定义。

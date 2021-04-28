@@ -1,283 +1,99 @@
-> * 原文地址：[5 Advanced TypeScript Tips To Make You a Better Programmer](https://levelup.gitconnected.com/5-advanced-typescript-tips-to-make-you-a-better-programmer-bd4070aa2ab4)
-> * 原文作者：[Anthony Oleinik](https://medium.com/@anth-oleinik)
+> * 原文地址：[Leave JavaScript Aside — Mint Is a Great Language for Building Web Apps](https://betterprogramming.pub/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps-3ce5a6873d48)
+> * 原文作者：[Chris Vibert](https://medium.com/@cp.vibert)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
-> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md](https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md)
+> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md](https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md)
 > * 译者：[Usualminds](https://github.com/Usualminds)
-> * 校对者：[PassionPenguin](https://github.com/PassionPenguin)
+> * 校对者：
 
-# 掌握这 5 个 TypeScript 高级技巧，成为更好的开发者
+# 将 JavaScript 放到一边 —— 用 Mint 这门强大的语言来创建一个 Web 应用
 
-![Beautiful :)](https://cdn-images-1.medium.com/max/3200/0*RKICUYO863Mu_2mX.png)
+![图片由 [Luca Volpe](https://unsplash.com/@lucavolpe?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/mint-cocktail?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)提供。](https://cdn-images-1.medium.com/max/13440/1*-AzcPWEeQ7lrNOGm9VWHVA.jpeg)
 
-Typescript 是一门神奇的语言 —— 相比 JavaScript 可以实现的所有功能，它只用十分之一的调试时间就可以完成，主要包括以下几点：
+最近, 我用 [Mint](https://www.mint-lang.com/) 构建了一个小型的 Web 应用程序, 正如大家所说的那样，在构建 Web 应用的过程中使用 Mint 这个相对没有那么主流的编程语言，确实是一次**全新**的开发体验。它是一门强类型语言，可以被编译为 JavaScript，并且内置了许多重要的功能。
 
-* 通过编写强类型和可读性更高的代码来减少 bug
-* 代码中可以集成更多有价值的功能，从而避免重复造轮子
+以上所有这些都意味着，使用 Mint，你可以**非常快速地**构建 Web 应用。
 
-以下 5 条 TypeScript 的高级使用技巧，可让你写出更好的 TypeScript 代码。
+## 为什么使用 Mint
 
-#### 1. is 运算符 / 类型保护
+我之所以尝试使用 Mint，是因为我想从非常熟悉的 JavaScript/TypeScript/React/Vue 生态里做走出来，做一些改变。Mint 提供了这种改变的可能性。它是一种与众不同的语言，但是使用 Mint 编写的 UI 组件和 React 极为类似：
 
-Swagger 极大地帮助我们了解后端可以提供什么样的服务 —— 但是，通常情况下，开发者往往会得到和约定不一致的 API，其中某些 API 属性可能存在，也可能不存在，或者是根据状态返回不同的对象。
+![](https://cdn-images-1.medium.com/max/2588/1*eNKRgF6r-mKpOfYVh1udEg.png)
 
-不幸的是，如果你不知道 API 会返回什么结果，就无法在编译时捕获它们，但我们可以做的是，使其在运行时更加易于处理（和上报！）。
+通常情况下，当我们想要突破 JavaScript 语言来进行 Web 应用开发时，人们会尝试选择 [Elm](https://elm-lang.org/) 这门语言。它和 Mint 有很多类似的地方，比如说它的强类型和函数式语言编程风格。我曾经尝试过使用 Elm 进行开发，但是我发现自己的进度太慢了，因为它的学习曲线比较陡峭，有太多的模版代码需要学习。而使用 Mint 却恰恰相反。
 
-API 调用一般是 TypeScript 错误的出处 —— 我们通常会将 API 调用的返回结果像下面这样强制转换：
+## 我做了什么
 
-```ts
-const myApiResult = await callApi("url.com/endpoint") as IApiResult
-```
+我**重构**了一个 Chrome 插件。我用 Mint 开发了一个**弹框**，当你点击工具栏中的扩展图标时它会弹出，事实上它只是一个小型的单页面 Web 应用。
 
-甚至更糟糕...
+![](https://cdn-images-1.medium.com/max/2000/1*Jzir0KchJB937yXh7zjvmw.png)
 
-```ts
-const myApiResult = await callApi("url.com/endpoint") as any
-```
+在[源码](https://github.com/cpv123/github-go-chrome-extension)中，你可以查看更多的有关于扩展的信息，也可以将 Javascript 版本和新的 Mint 版本进行比较。
 
-这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高 —— 事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。
+在我的下一篇文章里，我将会说明如何使用 Mint 来构建一个 Chrome 插件。今天，我们主要讲下日常使用 Mint 构建 Web 应用中我比较中意的几个点。
 
-但如果 API 返回的结果不是 `IApiResult` 类型怎么办？其返回值类型和我们期望的不同，我们可以定义一个随机的 `MyApiResult` 类型？其结果显而易见会存在问题，并且会 100% 地导致输入类型错误。
+[Mint 官网](https://www.mint-lang.com/)很友好地展示了 Mint 包含的所有功能。包括来语言特性和 Web 开发框架特点。这里有很多有趣的特性可供选择使用，但是我发现以下两个特性特别棒：
 
-我们可以使用 TS 的类型保护来处理以上问题:
+* 更少的外部依赖，因为它自身内置了很多功能
+* 更贴近 JavaScript 的语义化编程
 
-```ts
-interface IApiResponse { 
-   bar: string
-}
+## 内置状态管理
 
-const callFooApi = async (): Promise<IApiResponse> => {
- let response = await httpRequest('foo.api/barEndpoint') // 返回值类型未知
- if (responseIsbar(response)) {
-   return response
- } else {
-   throw Error("response is not of type IApiResponse")
- }
-}
+使用过 React 的人都知道，`npm install` 是日常开发工作的重要一环，但对于 Mint 来讲，它几乎内置了所有东西。这意味着我们只需要关注极少数的外部依赖（如果需要的话）。
 
-const responseIsBar = (response: unknown): response is IApiResponse => {
-    return (response as IApiResponse).bar !== undefined
-        && typeof (response as IApiResponse).bar === "string"
-}
-```
+Mint 提供了一套非常简单的全局状态管理方案，相对于 Redux，它不需要过多关注不可变的数据流和组件之间的状态连接。
 
-通过 `responseIsBar` 方法，我们可以提前判断返回值类型是否为 `IApiResponse` ，从而防止出现类型转换错误。
+使用 Mint，你可以定义 [stores](https://www.mint-lang.com/guide/reference/stores)，它包含了应用程序的状态以及更新该状态所需要的函数。任意组件想要获取或者更新这个状态时，都可以通过使用 `connect` 和 `exposing` 关键字来实现。当 store 中的数据发生改变时，与之相关的组件将会使用新的数据来渲染。
 
-实际使用场景中，你可以提示用户“服务器返回异常，请重试”，或者提示与之类似的错误信息，而不是显示 `属性 'bar' 不存在`。
+通常情况下，你可以在单独的文件夹中存放 store 和 组件，下面是一个示例：
 
-`is` 操作符的一般含义是：`value is type` 实际上是一个布尔值，当输入 `true` 时，意味着告诉了 TypeScript 返回值的类型确实是我们所期望的类型。
+![](https://cdn-images-1.medium.com/max/2456/1*W5wDBfg2iB0MbkkZfl0Ysw.png)
 
-#### 2. As Const / Readonly
+请注意状态值是使用 `next` 关键字来更新的，它专门用于安全地进行状态变更。
 
-这是一个更简洁的类型语法糖。很多人都知道，在给接口赋值时，可以通过 `readonly` 声明使该属性只能被读取而不能被写入
+## 内置的样式和 CSS
 
-```ts
-interface MyInterface {
-  readonly myProperty: string
-}
+对我而言，内置的样式解决方案绝对是一个惊喜：CSS 的作用域是定义在它的组件内部。基于 arguments/props 的可选样式，媒体查询，选择器嵌套以及真正的 CSS 语法 (比如`align-items` 而不是 `alignItems`)。
 
-let t: MyInterface = {
-  myProperty: 'hi'
-}
+感觉像是拥有了 [styled-components](https://styled-components.com/) 的强大功能，但却不要进行 `npm install`。
 
-t.myProperty = "bye" // 编译错误, myProperty 是只读属性.
-```
+如下是一个相对基础的示例，它展示了如何根据参数对 CSS 赋值：
 
-这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。
+![](https://cdn-images-1.medium.com/max/2516/1*G1HvZDnQy5-DW3BZnlCIPQ.png)
 
-Typescript 支持在类型声明后加上 `as const`，这样我们就相当于给每个属性添加 `readonly`。
+进一步讲，你可以使用组件中的 props 和状态来进行赋值。下面的例子展示了一个按钮如何根据以下情况进行样式转变：
 
-```ts
-let t = {
- myProperty: "hi" 
- myArr: [1, 2, 3]
-} as const 
-```
+1. 应用程序的原始色值，可以在全局的 **theme store** 中配置。
+2. 按钮的 `variant` 属性，可以由 `ButtonVariants` 枚举进行类型定义。
 
-现在，T 的所有属性值都是不可修改的。例如，`t.myArr.push(1)` 不能编译，给 `myProperty` 属性重新赋值同样也不能编译。
+![](https://cdn-images-1.medium.com/max/2016/1*U-3VK_BjR074wB2SZ4xSxA.png)
 
-我认为对我们最有帮助的场景与之前一样 —— 不同的是，在这里我们不是返回一个接口，而是想通过代理的方法修改 API 对象中的部分属性，使其成为一个数据对象，所以，结合前面的技巧:
+我们可以根据 `ButtonVariants` 枚举中包含的值对按钮组件进行渲染：
 
-```ts
-const callFooApi = async () => {
- let response = await httpRequest('foo.api/barEndpoint') // 返回值类型未知
- if (responseIsbar(response)) {
-   // 过滤掉不需要掉数据，在这里对数据进行自定义格式化处理
-   return {
-      firstLastName: [response.firstName, response.lastName]
-   } as const
- } else {
-   throw Error("response is not of type IApiResponse")
- }
-}
-```
+![](https://cdn-images-1.medium.com/max/2700/1*8nBj3UvkJ5HVO_hNqKoJLg.png)
 
-使用这个方法的开发者想必都会喜出望外 —— 它不仅可以识别返回值类型（来自 `response` 的类型变量），而且数据还是不可变的（immutable）。当我们调用 API 时，可以通过这个简单的方法验证返回值是否符合我们的期望。这对每个开发者而言都是一种进步！
+![](https://cdn-images-1.medium.com/max/2000/1*xRLD2GIbZPOg4zqxJgINCg.png)
 
-做一个小提示，如果你只想进行类型声明，而不想让其属性只读，你可以这样做：`type MyTypeReadonly = Readonly<MyType>` 。我们将会在后面的第 5 点更深入地讨论这个问题。
+样式和状态管理只是 Mint 内置功能的两个示例。Mint 还提供了内置路由，代码格式化，测试流，文档工具等更多功能。
 
-#### 3. 扩展性更好的 Switch Case
+## 语义化的 JavaScript —— 在 Mint 中编写 JavaScript 代码
 
-扩展枚举（enum）通常是一件叫人头疼的事情，因为我们需要在所有使用枚举的地方都添加新的 Case。如果我们忘记了其中某一个跳转条件，我们的程序就会跳转到默认情况 (如果有的话) 或者失败，这可能会导致出乎意料的问题。
+对于绝大多数人而言，语义化是一个锦上添花的特性，但对我来说，它是至关重要的，因为我正在使用 Mint 构建适配 JavaScript Chrome API 的 Chrome 插件。
 
-没有人喜欢这样。
+这是语义化 JavaScript 的一个示例，其中，Mint 调用了一个名为 `handleSubmit` 的 JavaScript 函数，并且传了一个 Mint 的形参给这个函数：
 
-许多语言解决这个问题的方法是：必须有明确 Switch 和 Case 场景，或者显式声明一个的、 `default` 状态。Typescript 编译器不支持这种情况，但我们可以这样创建 `switch case`：如果我们扩展了枚举（enum）或其他可能的值，我们的程序就不会编译，直到我们显式地处理了这种情况。
+![](https://cdn-images-1.medium.com/max/2000/1*G4umab884w5PXFP-ZEzYnA.png)
 
-我们所说的方法如下：
+Mint 实际上提供了[几种不同的方式](https://www.mint-lang.com/guide/reference/javascript-interop)与 JavaScript 进行交互，这里我们只是展示了最常用的方法：通过单引号包裹的方式内联 JavaScript 代码。这是奏效的，因为  Mint 可以编译为 JavaScript。当你使用 Mint 构建应用程序时，所有的代码最终都会被编译为 JavaScript。
 
-```ts
-enum Directions {
-   Left,
-   Right
-}
+尽管使用内联的方法快捷简便，但它需要进行类型推断，这并不是完全可行的，有的类型可能无法推断出来。在 Mint 中可以通过使用[decode expressions](https://www.mint-lang.com/guide/reference/javascript-interop/decode-expression) 将 JavaScript 对象转化为有明确的类型的值，这种方法是类型安全的。
 
-const turnTowards = randomEnum(Direction)
+## 结论
 
-switch (turnTowards) {
-      case Directions.Right:
-         console.log('we\'re going right!')
-         break
-      case Directions.Left:
-         console.log('Turning left!')
-         break
-}
-```
+总而言之，我使用 Mint 进行开发的经历是极有意义的，有了来自 TypeScript 和 React 的相关知识，使用 Mint 更容易上手，并且其语言核心内置了很多熟悉的概念特性。
 
-即使是初级的开发者也可以看懂我们这个程序到意思是向左转或向右转。在这里添加默认（default）语句似乎并不必要，这里只有两个枚举值。但是请记住，我们编写代码不仅仅是为了完成它，而且要考虑代码到可维护性！
+我做的只是一个内容简单的小型应用程序，因此我无法确切地说 Mint 同样适用于大型应用程序。但是，从我个人的角度来讲， Mint 并不需要为此做准备。
 
-假设两年后，另一个开发人员决定添加一个新的方向：Forward 。现在，枚举（enum）看起来是这样的：
-
-```ts
-enum Directions {
-   Left,
-   Right,
-   Forward
-}
-```
-
-程序里的 `switch case` 知道这一点，但它**不在乎**。它会很自然地尝试打开 `goingTowards` ，如果它遇到 forward，它也会很自然地出错。两年是很长的一段时间，开发者忘记了之前都在哪里使用了 `switch case` 代码。对此，我们可以添加一个针对默认值的异常处理，让其在编译时抛出异常，这样总比运行时错误好。
-
-所以我们可以添加默认情况如下：
-
-```ts
-default:
-   const exhaustiveCheck: never = myDirection
-   throw new Error(exhaustiveCheck)
-```
-
-如果我们处理了 `Forward` 这个情况，那么一切都正常。如果我们不这样做，那么我们的程序将无法编译！( `throw` 这一行是可选的，我这样做只是为了关闭 eslint 对未使用变量的校验报错)
-
-这降低了我们每次改变枚举（enum）时的记忆负担，我们可以通过编译器找到它们。
-
-#### 4. 使用 Null 代替 ? 操作符
-
-许多使用过其他语言的开发者都会认为 `null === undefined`，事实并非如此（不用担心，这个技巧会变得更好）
-
-`undefined` 是可以通过 JavaScript 赋值的 —— 例如，如果我们有一个文本框，它没有输入值，那它就是 `undefined`。可以把 `undefined` 看作是 JavaScript 的一个自动触发的空值。
-
-我们通常很难判断一个字段是设计里本来就没有，还是无意中留下的。如果我专门为一个字段设置默认值，我会用 `null`。这样，每个人都知道这个字段是专门置空的。
-
-这里有一个例子：
-
-```ts
-interface Foo {
-   bar?: string
-}
-```
-
-属性 `bar` 以问号结尾，意味着这个字段可能是 `undefined`，因此 `let baz: Foo = {}` 会通过编译（另外, `let baz: Foo = {bar: null}` 也能通过编译）。然而开发者无法通过上述代码知道我是故意让 `bar` 取空值还是无意的。 一个更好表述我声明意图的示例如下：
-
-```ts
-interface Foo {
-  bar: string | null
-}
-```
-
-现在，我必须 **明确地声明 `bar` 的取值为 `null`。** 我的意图不会被混淆 — `bar` 没有明确的取值。
-
-这不仅适用于接口声明 —— 我还会在函数不返回任何内容时使用它。这在编译时很有帮助:
-
-```ts
-//如果我们忘记指定了函数的返回值，编译器会返回默认值
-const myFunc = (): string | void => {
-   console.log('blah')
-}
-
-//如果我们忘记指定了函数的返回值，编译器会返回 null
-const myFunc = (): string | null => {
- //编译错误时不会返回 null
-}
-```
-
-#### 5. Utility Types
-
-如果你在大型的 TS 项目里写过代码，你就会发现接口声明无处不在。有些接口与其他接口名称一样，有些接口属性重复，有些接口属性和名称都一样。
-
-如果真是这样的话，先不用惊慌。你正在按照预期使用 TS：那就是类型安全。但是，如果你没有利用 TS 的内置类型，那你可能写了太多的重复代码。下面是 [你至少应该知道存在的内建类型的链接](https://www.typescriptlang.org/docs/handbook/utility-types.html)，以便你可以在代码中使用。
-
-我将介绍我最喜欢的和最常用的一些内置类型，但是你知道的越多，你就能把你的代码写得越好。
-
-**Partial**
-
-将所有类型字段设置为可选。当你想要对一个对象执行更新时，这是很有用的，例如:
-
-```ts
-function updateBook<T extends Book>(book: T, updates: Partial<T>) {
-   const updatedBook = {...book, ...updates }
-   notifyServer(updatedBook)
-   return updatedBook
-}
-```
-
-**Readonly**
-
-它将所有字段设置为只读。我使用它作为返回值，主要是在返回数据时。
-
-```ts
-function generateData(): Readonly<T>
-```
-
-**NonNullable**
-
-创建一个新类型，不包含 null / undefined 属性。如果我们正在增加或填写一些数据，这是很有用的，可以保证它是有值的。
-
-```ts
-interface IPerson {
-  name: string
-}
-
-type MaybePerson = Person | null
-
-const fillMaybePerson = (maybe: MaybePerson): NonNullable<MaybePerson> ...
-```
-
-**ReturnType**
-
-Type 是函数的返回类型。如果你写的 API 涉及到了函数，并且不想约束函数，这很有用。
-
-```ts
-const getMoney = (): number => {
-  return 100000
-}
-
-ReturnType<getMoney> //number
-```
-
-**Required**
-
-从接口声明中移除具有 `?` 属性的值。
-
-```ts
-interface T {
-  maybeName?: string
-}
-
-type CertainT = Required<T> // 等价于 { maybeName: string }
-```
-
----
-
-关于 TS，我要说的就这么多了！如果你在任何地方发现了错误，请告诉我，这样我可以在其他人学到错误知识之前修复它。如果你认为我遗漏了什么知识点，也请让告诉我！
+官方的 [mint-ui](https://ui.mint-lang.com/) 组件库才刚刚发布，这个语言似乎正在受到大家的关注。我希望 Mint 在 2021 年能更上一层楼。
 
 > 如果发现译文存在错误或其他需要改进的地方，欢迎到 [掘金翻译计划](https://github.com/xitu/gold-miner) 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 **本文永久链接** 即为本文在 GitHub 上的 MarkDown 链接。
 
