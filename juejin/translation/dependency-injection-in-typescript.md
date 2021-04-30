@@ -2,20 +2,20 @@
 > * 原文作者：[Mert Türkmenoğlu](https://medium.com/@mertturkmenoglu)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
 > * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/dependency-injection-in-typescript.md](https://github.com/xitu/gold-miner/blob/master/article/2021/dependency-injection-in-typescript.md)
-> * 译者：
+> * 译者：[Usualminds](https://github.com/Usualminds)
 > * 校对者：
 
-# Dependency Injection in TypeScript
+# TypeScript 中的依赖注入
 
 ![Photo by [Anthony DELANOIX](https://unsplash.com/@anthonydelanoix?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/11174/0*EjOezZWFJ92qj8bt)
 
-## Introduction
+## 简介
 
-Every software program has fundamental building blocks. In Object-Oriented Programming, we use classes to build complex architectures. Like building a structure, we set up relations that are called **dependencies** between our blocks. Other classes support our class by offering to do complex operations on our behalf of us.
+每一个软件程序都有其最基础的构建模块。在面向对象的编程语言中， 我们使用类去构建复杂的体系架构。像是建一幢大楼，我们把模块之间建立的联系称之为**依赖**。其他的类为了支持我们的类需求，提供了复杂操作的封装。
 
-A class may have fields that refer to other ones. Then, we have to ask these questions: How are these references constructed? Should **we** assemble these objects, or should **others** be responsible for instantiating them? What if instantiating a class is **too complex**, and we want to avoid spaghetti code? All these questions compose the problem set the **Dependency Injection Principle** tries to solve.
+一个类可能有引用其他类的字段。然后，我们不得不问及这些问题：这些引用是怎么被创建的？是**我们**去组合这些对象，还是**其他人**负责实例化他们？如果要实例化的类**太复杂**，并且我们想要避免出现垃圾代码？所有这些问题集都可以试图用**依赖注入原则**去解决。
 
-Before we proceed to the examples, we have to understand a few concepts about dependency injection. The dependency injection principle tells us that a class should **receive** its dependencies rather than instantiating them. Delegating object initializations can reduce the stress of designing classes by taking care of complex operations. You carry away the complicated part from the code, and you re-introduce dependencies through other ways. How you do this **“carrying away”** and **“re-introducing them”** is the problem of managing dependencies. You can manually handle all of the initializations and injections, but this leads to intricate systems, which we try to avoid. Instead of this, you can transfer your construction responsibilities to an **IoC container**.
+在我们开始示例之前，我们必须要去理解一些关于依赖注入的相关概念。依赖注入原则告诉我们，一个类应该去**接收**它的依赖而非实例化他们。 Delegating object initializations can reduce the stress of designing classes by taking care of complex operations. You carry away the complicated part from the code, and you re-introduce dependencies through other ways. How you do this **“carrying away”** and **“re-introducing them”** is the problem of managing dependencies. You can manually handle all of the initializations and injections, but this leads to intricate systems, which we try to avoid. Instead of this, you can transfer your construction responsibilities to an **IoC container**.
 
 **Inversion of Control** is inverting the whole program flow so that a container manages all program dependencies. You create a container, and this container becomes responsible for constructing every object. When a class needs an object to instantiate, the IoC container serves required dependencies.
 
