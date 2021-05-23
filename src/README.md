@@ -1,99 +1,190 @@
-> * 原文地址：[Leave JavaScript Aside — Mint Is a Great Language for Building Web Apps](https://betterprogramming.pub/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps-3ce5a6873d48)
-> * 原文作者：[Chris Vibert](https://medium.com/@cp.vibert)
+> * 原文地址：[Dependency Injection in TypeScript](https://levelup.gitconnected.com/dependency-injection-in-typescript-2f66912d143c)
+> * 原文作者：[Mert Türkmenoğlu](https://medium.com/@mertturkmenoglu)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
-> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md](https://github.com/xitu/gold-miner/blob/master/article/2021/leave-javascript-aside-mint-is-a-great-language-for-building-web-apps.md)
+> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/dependency-injection-in-typescript.md](https://github.com/xitu/gold-miner/blob/master/article/2021/dependency-injection-in-typescript.md)
 > * 译者：[Usualminds](https://github.com/Usualminds)
-> * 校对者：[Kim Yang](https://github.com/KimYangOfCat)、[Chorer](https://github.com/Chorer)、[PassionPenguin](https://github.com/PassionPenguin)
+> * 校对者：
 
-# 将 JavaScript 放到一边 —— 用 Mint 这门强大的语言来创建一个 Web 应用
+# TypeScript 中的依赖注入
 
-![图片由 [Unsplash](https://unsplash.com/s/photos/mint-cocktail?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) 用户 [Luca Volpe](https://unsplash.com/@lucavolpe?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)提供。](https://cdn-images-1.medium.com/max/13440/1*-AzcPWEeQ7lrNOGm9VWHVA.jpeg)
+![Photo by [Anthony DELANOIX](https://unsplash.com/@anthonydelanoix?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/11174/0*EjOezZWFJ92qj8bt)
 
-最近, 我用 [Mint](https://www.mint-lang.com/) 构建了一个小型的 Web 应用程序, 正如大家所说的那样，这确实是一次**全新**的开发体验。毕竟对于构建 Web 应用来说的，Mint 是一个相对没有那么主流的编程语言。同时它也是一门强类型语言，可以被编译为 JavaScript，并且内置了许多重要的功能。
+## 简介
 
-以上所有这些都意味着，使用 Mint，你可以**非常快速地**构建 Web 应用。
+每一个软件程序都有其最基础的构建模块。在面向对象的编程语言中， 我们使用类去构建复杂的体系架构。像建一幢大楼，我们把模块之间建立的联系称之为**依赖**。其他的类为了支持我们类的需求，提供复杂的封装操作。
 
-## 为什么使用 Mint
+一个类可能有引用其他类的字段。然后，我们不得不问及这些问题：这些引用是怎么被创建的？是**我们**去组合这些对象，还是**其他类**负责实例化它们？如果要实例化的类**太复杂**，并且我们想避免出现垃圾代码？所有这些问题都可以试图通过**依赖注入原则**来解决。
 
-我之所以尝试使用 Mint，是因为我想从非常熟悉的 JavaScript/TypeScript/React/Vue 生态里走出来，做一些改变。Mint 提供了这种改变的可能性。它是一种与众不同的语言，但是使用 Mint 编写的 UI 组件和 React 极为相似：
+在开始示例之前，我们必须要去理解关于依赖注入的一些相关概念。依赖注入原则告诉我们，一个类应该去**接收**而非实例化它的依赖。通过委托方式来进行对象初始化，这可以处理较为复杂的操作，从而减少在类设计上的压力。你可以移除代码中复杂的模块，并通过其他方式重新引入依赖。如何处理**移除**和**重新引入依赖**，这是依赖管理的问题。你可以手动处理所有对象的初始化和注入，但是这将会使整个系统变得复杂，我们要尽量避免这种情况的发生。相反，你可以将构造的职责转移到 **IoC 容器**。
 
-![](https://cdn-images-1.medium.com/max/2588/1*eNKRgF6r-mKpOfYVh1udEg.png)
+**反转控制**是通过反转整个程序的流程，以便容器对所有程序中涉及的依赖进行管理。你可以创建一个容器，整个容器负责构造对象。当一个类需要实例化对象时，IoC 容器可以提供它所需要的依赖。
 
-通常情况下，当我们想要突破 JavaScript 语言来进行 Web 应用开发时，会尝试选择 [Elm](https://elm-lang.org/) 这门语言。它和 Mint 有很多类似的地方，比如说它的强类型和函数式语言编程风格。我曾经尝试过使用 Elm 进行开发，但是我发现自己的进度太慢了，因为它的学习曲线比较陡峭，有太多的模版代码需要学习。而使用 Mint 却恰恰相反。
+IoC **只**提供了一种方法而非具体的实现。为了使用依赖注入原则，你需要一个**依赖注入框架**。举例如下：
 
-## 我做了什么
+* **Spring** 和 **Dagger**是 **Java** 的依赖注入框架
+* **Hilt** 是 **Kotlin** 的依赖注入框架
+* **Unity** 是 **C#** 的依赖注入框架
+* **Inversify**、**Nest.js** 和 **TypeDI** 是 **TypeScript** 的依赖注入框架
 
-我**重构**了一个 Chrome 插件。我用 Mint 开发了一个**弹框**，当你点击工具栏中的插件图标时它会弹出，事实上它只是一个小型的单页面 Web 应用。
+## 概览和角色划分
 
-![](https://cdn-images-1.medium.com/max/2000/1*Jzir0KchJB937yXh7zjvmw.png)
+![依赖注入概览](https://cdn-images-1.medium.com/max/2000/1*Wk4iA2XNAOl4pAF5cYbU3w.png)
 
-在[源码](https://github.com/cpv123/github-go-chrome-extension)中，你可以查看更多的有关于插件的信息，也可以对比分析 Javascript 版本和优化后的 Mint 新版本。
+在依赖注入原则中，我们需要理解**四**种不同的**角色**:
 
-在我的下一篇文章里，我将会说明如何使用 Mint 来构建一个 Chrome 插件。今天，我们主要讲下日常使用 Mint 构建 Web 应用中我比较中意的几个点。
+* **客户端**
+* **服务端**
+* **接口**
+* **注入器**
 
-[Mint 官网](https://www.mint-lang.com/)很友好地展示了 Mint 包含的所有功能。包括来语言特性和 Web 开发框架特点。这里有很多有趣的特性可供选择使用，但是我发现以下两个特性特别棒：
+**服务端**是我们对外暴露服务使用的。这些类由 IoC 容器实例化和使用。一个**客户端**通过 IoC 容器来使用这些服务。客户端不应该被具体细节所困扰，因此**接口**需要确保客户端和服务端保持协调。客户端请求所需的依赖，**注入器**提供实例化服务。
 
-* 更少的外部依赖，因为它自身内置了很多功能
-* 更贴近 JavaScript 的语义化编程
+## 依赖注入的类型
 
-## 内置状态管理
+当我们讨论如何在类中注入依赖时，可以通过**三种不同方式**来实现：
 
-使用过 React 的人都知道，`npm install` 是日常开发工作的重要一环，但对于 Mint 来讲，它几乎内置了所有东西。这意味着我们只需要关注极少数的外部依赖（如果需要的话）。
+* 我们可以通过**属性**(字段)提供依赖关系。在类上定义属性，然后将具体的对象注入到该属性中，这就是属性注入。通过对外暴露这个属性，但这样做**违背**了面向对象程序设计的**封装**原则；因此，要尽量避免这种注入。
+* 我们可以通过**方法**提供依赖关系。对象的**状态应该是私有的**，当外部想要改变该状态时，它应该调用类的 **getter/setter 方法**。所以当你使用 setter 方法初始化类中的私有字段时，你可以使用**方法注入**。
+* 我们可以通过**构造函数**提供依赖关系。构造函数方法因为其基本属性和对象构造高度融合在一起。我们通常**支持通过构造函数**进行注入，因为我们的目标和构造函数的方法很类似。
 
-Mint 提供了一套非常简单的全局状态管理方案，类似 Redux，但它不需要过多关注不可变的数据流和组件之间的状态连接。
+## 使用 TypeDI 库
 
-使用 Mint，你可以定义 [stores](https://www.mint-lang.com/guide/reference/stores)，它包含了应用程序的状态以及更新该状态所需要的函数。任意组件想要获取或者更新某个状态时，都可以使用 `connect` 和 `exposing` 关键字来轻松连接到相关的 store。当 store 中的数据发生改变时，与之相关的组件将会使用新的数据来渲染。
+一旦我们理解了依赖注入的基本原理，使用什么框架或者库差别并不大。这篇文章里，我选择了 TypeScript 语言和 TypeDI 库来展示这些基本概念。
 
-通常情况下，你可以在单独的文件夹中存放 store 和组件，下面是一个示例：
+初始化 Yarn 和添加 TypeScript 会花点时间。因为我不想使用没有足够说明信息的出名项目配置来让你感到无趣。所以我将给出初步的代码并做简要介绍。你可以从[这个 Github 仓库](https://github.com/mertturkmenoglu/typescript-dependency-injection)查看和下载代码。
 
-![](https://cdn-images-1.medium.com/max/2456/1*W5wDBfg2iB0MbkkZfl0Ysw.png)
+任何 TypeScript 项目都可以作为依赖注入演示的例子。但这篇文章里我选择了一个 Node/Express 应用作为示例。我假设使用 TypeScript 的开发者要么直接使用 Node/Express 服务器，要么对它们有所了解。
 
-请注意状态值是使用 `next` 关键字来更新的，它专门用于安全地进行状态变更。
+当你查看 `package.json` 文件时，你可以看到两个依赖项配置，让我简要介绍下它们：
 
-## 内置的样式和 CSS
+* **express**：Express 是编写 Node.js RESTful 服务的流行框架。
+* **reflect-metadata**：一个用于元数据反射 API 的库。它允许其他库通过装饰器使用元数据。
+* **ts-node**：Node.js 无法运行 TypeScript 文件。在代码运行前，需要将 TypeScript 编译为 JavaScript。ts-node 帮你处理了这个过程。
+* **typedi**：TypeDI 是一个 TypeScript 依赖注入库。我们很快会看到它的示例。
+* **typescript**：我们在这个项目中使用了 TypeScript，因此需要将它也作为一个依赖。
+* **@types/express**：Express 库的类型定义。
+* **@types/node**：Node.js 的类型定义。
+* **ts-node-dev**：这个库允许你运行 TypeScript，并观察某些文件的变化情况。
 
-对我而言，内置的样式解决方案绝对是一个惊喜：CSS 的作用域是定义在它的组件内部。并且基于 arguments/props、媒体查询、选择器嵌套以及真正的 CSS 语法等实现可选样式 (比如`align-items` 而不是 `alignItems`)。
+你需要留意一些重要的编译器选项配置。如果你看下 **tsconfig.json**，你可以看到编译过程的配置选项：
 
-感觉像是拥有了 [styled-components](https://styled-components.com/) 的强大功能，但却不需要进行 `npm install`。
+* 我们为 **reflect-metadata** 和 **node** 指定类型。
+* 我们必须将 **mitDecoratorMetadata** 和 **experimentalDecorators** 设置为 true。
 
-如下是一个相对基础的示例，它展示了如何根据参数对 CSS 赋值：
+所有的源码都在 **src** 文件夹下。**src/index.ts** 是我们项目的入口文件。这个文件包含了服务器的所有引导步骤：
 
-![](https://cdn-images-1.medium.com/max/2516/1*G1HvZDnQy5-DW3BZnlCIPQ.png)
+```TypeScript
+import 'reflect-metadata';
 
-进一步讲，你可以使用组件中的 props 和状态来进行赋值。下面的例子展示了一个按钮如何根据以下情况进行样式转变：
+import express from 'express';
+import Container from 'typedi';
+import UserController from './controllers/UserController';
 
-1. 应用程序的原始色值，可以在全局的 **theme store** 中配置。
-2. 按钮的 `variant` 属性，可以由 `ButtonVariants` 枚举进行类型定义。
+const main = async () => {
+  const app = express();
 
-![](https://cdn-images-1.medium.com/max/2016/1*U-3VK_BjR074wB2SZ4xSxA.png)
+  const userController = Container.get(UserController);
 
-我们可以根据 `ButtonVariants` 枚举中包含的值对按钮组件进行渲染：
+  app.get('/users', (req, res) => userController.getAllUsers(req, res));
 
-![](https://cdn-images-1.medium.com/max/2700/1*8nBj3UvkJ5HVO_hNqKoJLg.png)
+  app.listen(3000, () => {
+    console.log('Server started');
+  });
+}
 
-![](https://cdn-images-1.medium.com/max/2000/1*xRLD2GIbZPOg4zqxJgINCg.png)
+main().catch(err => {
+  console.error(err);
+});
+```
 
-样式和状态管理只是 Mint 内置功能的两个示例。Mint 还提供了内置路由、代码格式化、测试流、文档工具等更多功能。
+这段代码是一个只有一个端口的小型 Express 服务器。当你向 **/users** 路由发送一个 **GET** 请求时，它会返回一个用户列表。**main** 函数的核心是 **Container.get** 方法。注意我们并没有使用 new 关键字或者实例化对象。我们只是调用 IoC 容器返回的一个 UserController 实例方法。然后绑定了路由和控制器方法。
 
-## 语义化的 JavaScript —— 在 Mint 中编写 JavaScript 代码
+我们的应用程序是一个虚拟的 RESTful 服务器，但我不想让它没有一点意义。我添加了四个不同的文件夹代表一个完备后端服务的基本部分。它们是 **controllers**、**models**、**repositories** 和 **services**。现在让我一个个介绍下它们：
 
-对于绝大多数人而言，语义化是一个锦上添花的特性。但对我来说，它是至关重要的，因为我正在使用 Mint 构建适配 JavaScript Chrome API 的 Chrome 插件。
+* **Controllers** 文件夹包含我们的 **REST 控制器**。它们负责协调客户端和服务器之间的通信。它们接收请求并返回响应。
+* **Models** 文件夹包含我们的**数据库实体类**。我们没有数据库连接，也不需要，但建立一个合适的项目结构对于学习该项目有很大的帮助。我们假设它是真是的数据库实体并继续我们的项目。
+* **Services** 文件夹包含我们的**服务**。它们通过访问不同的存储库，负责为 REST 控制器提供所需服务。
+* **Repositories** 文件夹包含我们**数据库连接类**。我们使用 Data Mapper 模式来执行数据库操作。该模式中我们使用实体类来访问数据库并进行相关操作。
 
-这是语义化 JavaScript 的一个示例，其中，Mint 调用了一个名为 `handleSubmit` 的 JavaScript 函数，并且传了一个 Mint 的形参给这个函数：
+我们不会把所有的东西都放到一个类中。请求和响应之间还有很多层级。这就是所谓的**分层架构**。通过类之间的依赖共享，我们可以更容易地进行依赖注入。
 
-![](https://cdn-images-1.medium.com/max/2000/1*G4umab884w5PXFP-ZEzYnA.png)
+```TypeScript
+import { Request, Response } from "express";
+import { Service } from "typedi";
+import UserService from "../services/UserService";
 
-Mint 实际上提供了[几种不同的方式](https://www.mint-lang.com/guide/reference/javascript-interop)与 JavaScript 进行交互，这里我们只是展示了最常用的方法：通过单引号包裹的方式内联 JavaScript 代码。这是奏效的，因为  Mint 可以编译为 JavaScript。当你使用 Mint 构建应用程序时，所有的代码最终都会被编译为 JavaScript。
+@Service()
+class UserController {
+  constructor(private readonly userService: UserService) { }
+  async getAllUsers(_req: Request, res: Response) {
+    const result = await this.userService.getAllUsers();
+    return res.json(result);
+  }
+}
 
-尽管使用内联的方法快捷简便，但它需要进行类型推断，这并不是完全可行的，有的类型可能无法推断出来。在 Mint 中可以通过使用[decode expressions](https://www.mint-lang.com/guide/reference/javascript-interop/decode-expression) 将 JavaScript 对象转化为有明确类型的值，这种方法是类型安全的。
+export default UserController;
+```
+
+UserController 只有一个方法。`getAllUsers` 方法负责从用户服务中获取结果并进行传输。我们给 UserController 添加类一个 **Service** 装饰器，因为我们希望这个类由 IoC 容器进行管理。在构造函数方法内部，我们可以看到这个类需要一个 UserService 实例。同样，我们不需要控制这个依赖关系。因为 TypeDI 容器为 UserService 创建了一个实例，当它生成 UserController 实例时，它将注入到  UserService 中。
+
+```TypeScript
+import { Service } from "typedi";
+import User from "../models/User";
+import UserRepository from "../repositories/UserRepository";
+
+@Service()
+class UserService {
+  constructor(private readonly userRepository: UserRepository) { }
+  async getAllUsers(): Promise<User[]> {
+    const result = await this.userRepository.getAllUsers();
+    return result;
+  }
+}
+
+export default UserService;
+```
+
+UserService 和 UserController 很类似。我们向类添加一个 Service 装饰器，并在构造函数方法中指定它们想要到依赖项。
+
+```TypeScript
+import { Service } from "typedi";
+import User from "../models/User";
+
+@Service()
+class UserRepository {
+  private readonly users: User[] = [
+    { name: 'Emily' },
+    { name: 'John' },
+    { name: 'Jane' },
+  ];
+
+  async getAllUsers(): Promise<User[]> {
+    return this.users;
+  }
+}
+
+export default UserRepository;
+```
+
+UserRepository 是我们的最后一步。我们用 Service 来注解这个类，但是我们没有任何依赖关系。因为没有数据库连接，所以我只是将用户列表作为私有属性硬编码到类中。
 
 ## 结论
 
-总而言之，我使用 Mint 进行开发的经历是很有意义的，有了来自 TypeScript 和 React 的相关知识，使用 Mint 更容易上手，并且其语言核心内置了很多熟悉的概念特性。
+依赖注入是管理复杂对象初始化的有力工具。手动进行依赖注入总比什么都不做要好，但是使用 TypeDI 更简单可行。当你要开始做一个新项目时，你应该明确地考虑下依赖注入原则并给予适当尝试。
 
-我做的只是一个内容简单的小型应用程序，因此我无法确切地说 Mint 同样适用于构建涉及到复杂路由、数据获取、性能考量等元素的大型应用程序。但是，从我个人的角度来讲，Mint 对此早已做好了万全准备。
+你可以在[这个 GitHub 分支](https://github.com/mertturkmenoglu/typescript-dependency-injection)找到本文的代码。
 
-官方的 [mint-ui](https://ui.mint-lang.com/) 组件库才刚刚发布，这个语言似乎正在受到大家的关注。我希望 Mint 在 2021 年能更上一层楼。
+你可以在 [GitHub](https://github.com/mertturkmenoglu)、[LinkedIn](https://www.linkedin.com/in/mert-turkmenoglu/) 和 [Twitter](https://twitter.com/capreaee) 找到我。
+
+感谢阅读，祝你快乐。
+
+## 引用
+
+* [1] [](https://www.tutorialsteacher.com/ioc/dependency-injection)[https://www.tutorialsteacher.com/ioc/dependency-injection](https://www.tutorialsteacher.com/ioc/dependency-injection)
+* [2] [https://en.wikipedia.org/wiki/Dependency_injection](https://en.wikipedia.org/wiki/Dependency_injection)
+* [3] [https://developer.android.com/training/dependency-injection](https://developer.android.com/training/dependency-injection)
+* [4] [https://stackoverflow.com/questions/21288/which-net-dependency-injection-frameworks-are-worth-looking-into](https://stackoverflow.com/questions/21288/which-net-dependency-injection-frameworks-are-worth-looking-into)
+* [5] [https://docs.typestack.community/typedi/v/develop/01-getting-started](https://docs.typestack.community/typedi/v/develop/01-getting-started)
 
 > 如果发现译文存在错误或其他需要改进的地方，欢迎到 [掘金翻译计划](https://github.com/xitu/gold-miner) 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 **本文永久链接** 即为本文在 GitHub 上的 MarkDown 链接。
 
