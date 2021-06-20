@@ -11,19 +11,19 @@
 
 ## CSS grid 网格编辑器 
 
-`CSS Grid` 编辑器是一个社区呼声很高的功能。现在你可以通过它来预览和创建 `CSS Grid` 布局了。
+`CSS Grid` 编辑器是一个社区呼声很高的特性。现在你可以通过它来预览和创建 `CSS Grid` 布局了。
 
 ![CSS Grid 编辑器](https://developer-chrome-com.imgix.net/image/dPDCek3EhZgLQPGtEG3y0fTn4v82/mV9Ac7QAD8vVPoiqmii6.png?auto=format)
 
-当页面上的 HTML 元素应用了 `display: grid` 或者 `display: inline-grid` 样式时，你可以在样式面板中看到它旁边有一个图标。单击它就可以切换到 CSS grid 编辑器。在编辑器里，你可以通过屏幕上的图标进行页面预览并观察其潜在变化（比如：`justify-content: space-around`），只需要点击一下就可以创建网格对应的外观布局。
+当页面上的 HTML 元素应用了 `display: grid` 或者 `display: inline-grid` 样式时，你可以在样式面板中看到一个图标在它的旁边。单击它就可以切换到 CSS grid 编辑器。在编辑器里，你可以通过屏幕上的图标预览页面的潜在变化。（比如：`justify-content: space-around`），只需要点击一下就可以创建网格对应的外观布局。
 
 > Chromium issue: [1203241](https://crbug.com/1203241)
 
 ## 控制台支持 `const` 常量重复声明 
 
-除了支持现有的 [let 和 class 重复声明](/blog/new-in-devtools-80/#redeclarations)外，控制器现在也支持了 `const` 变量的重复声明。无法重新声明变量是 web 开发者的一个通病，因为他们经常使用控制台来调试 JavaScript 代码。
+除了支持现有的 [`let` 和 `class` 重复声明](/blog/new-in-devtools-80/#redeclarations)外，控制器现在也支持了 `const` 变量的重复声明。无法重新声明变量是 web 开发者的一个通病，因为他们经常使用控制台来调试 JavaScript 代码。
 
-这样做可以支持开发人员将代码直接复制到 DevTools 控制台，进而查看其工作原理或进行相关调试，对代码进行小范围修改，并且是在不刷新页面的情况下，对该过程进行重复。以前，如果代码中重复声明了 `const` 绑定的常量，DevTools 会抛出语法错误。
+这样做可以支持开发人员将代码直接复制到 DevTools 控制台，进而查看其工作原理或进行相关调试，对代码进行小范围修改，并且是在不刷新页面的情况下，对该过程进行重复。以前，如果代码中重复声明了 `const` 绑定的常量，DevTools 是会抛出语法错误的。
 
 可以参考下面的例子。在**不同的 REPL 脚本**中支持 `const` 常量的重复声明（参考变量 `a`）。需要注意的是，以下场景是不予支持的：
 
@@ -40,7 +40,7 @@
 
 ![源代码查看器](https://developer-chrome-com.imgix.net/image/dPDCek3EhZgLQPGtEG3y0fTn4v82/2QoBtjGjFxgDAkKaO3y2.png?auto=format)
 
- HTML 文档中内容的顺序对于搜索引擎优化和可访问性至关重要。新的 CSS 特性允许开发人员创建页面内容，这些新创建的内容，在屏幕上的顺序和原来 HTML 文档中的顺序大不相同。这是导致很大的可访问性问题，因为使用屏幕阅读的用户可能获得和正常用户不同的内容，这种用户体验最使可能使人感到困惑。
+ HTML 文档中内容的顺序对于搜索引擎优化和可访问性至关重要。新的 CSS 特性允许开发人员创建页面内容，这些新创建的内容，在屏幕上的顺序和原来 HTML 文档中的顺序大不相同。这是导致很大的可访问性问题，因为使用屏幕阅读的用户可能获得和正常用户不同的内容，这是最可能使人感到困惑的用户体验。
 
 > Chromium issue: [1094406](https://crbug.com/1094406)
 
@@ -56,9 +56,9 @@
 
 > Chromium issue: [1192084](https://crbug.com/1192084)
 
-## 增强 CORS 调试支持功能
+## 增强 CORS 调试支持 
 
-跨域资源共享 (CORS) 错误出现问题选项中。造成 CORS 错误的原因有很多。单击展开每个问题，进而了解潜在原因和解决方法。
+跨域资源共享 (CORS) 错误出现问题选项中。造成 CORS 错误的原因有很大。单击展开每个问题，进而了解潜在原因和解决方法。
 
 ![CORS issues in the Issues tab](https://developer-chrome-com.imgix.net/image/dPDCek3EhZgLQPGtEG3y0fTn4v82/UpiZQCNnlENB8ZluzeFt.png?auto=format)
 
@@ -66,7 +66,7 @@
 
 ## Network 面板更新
 
-### XHR 标签重命名为 Fetch/XHR 
+### 重命名 XHR 标签为 Fetch/XHR 
 
 XHR 标签现在被重命名为 **Fetch/XHR**。这个变更更明确地说明来该过滤器同时包含了 [`XMLHttpRequest`](https://xhr.spec.whatwg.org/) 和 [Fetch API](https://fetch.spec.whatwg.org/) 两种类型网络请求。
 
