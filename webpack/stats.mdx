@@ -1,0 +1,262 @@
+---
+title: Stats Data
+sort: 3
+contributors:
+  - skipjack
+  - franjohn21
+  - byzyk
+  - EugeneHlushko
+  - superburrito
+  - chenxsan
+  - rahul3v
+  - snitin315
+translators:
+  - Usualminds
+---
+
+使用 `webpack` 编译源码时，用户可以生成一个包含模块统计信息的 `JSON` 文件。这些统计信息可以用来分析应用中的依赖关系图，从而优化 `webpack` 的编译速度。该文件通常由以下 `CLI` 命令生成：
+
+```bash
+npx webpack --profile --json=compilation-stats.json
+```
+
+`--json=compilation-stats.json` 标志位告诉 `webpack emit` 一个包含依赖关系图和其他各种构建信息的 `compilation-stats.json` 文件。通常情况下，`--profile` 标志位也会被添加到每个 [`module objects`](#module-objects) 中，它包含了特定模块的统计信息。
+
+## Structure {#structure}
+
+输出 JSON 文件的顶层结构相当简单，但是也包含部分嵌套的数据结构。为了让文档更易于使用，每个嵌套的数据结构都有对应的一小节来讲，注意，你可以点击如下的链接，跳转到相关章节查看文档：
+
+```js-with-links
+{
+  'version': '5.9.0', // 用来编译的 webpack 版本
+  'hash': '11593e3b3ac85436984a', // 编译的特定哈希值
+  'time': 2469, // 编译时间（毫秒）
+  'publicPath': 'auto',
+  'outputPath': '/', // webpack 的输出目录路径
+  'assetsByChunkName': {
+    // 输出资源对应的 Chunk 名称
+    'main': [
+      'web.js?h=11593e3b3ac85436984a'
+    ],
+    'named-chunk': [
+      'named-chunk.web.js'
+    ],
+    'other-chunk': [
+      'other-chunk.js',
+      'other-chunk.css'
+    ]
+  },
+  'assets': [
+    // [asset objects](#asset-objects)列表
+  ],
+  'chunks': [
+    // [chunk objects](#chunk-objects)列表
+  ],
+  'modules': [
+    // [module objects](#module-objects)列表
+  ],
+  'entryPoints': {
+    // [entry objects](#entry-objects)列表
+  },
+  'errors': [
+    // [error objects](#errors-and-warnings)列表
+  ],
+  'errorsCount': 0, // 错误个数
+  'warnings': [
+    // [warning objects](#errors-and-warnings)列表
+  ],
+  'warningsCount': 0, // 告警个数
+}
+```
+
+### Assets Objects {#asset-objects}
+
+每个 `assets` 对象表示编译过程中 `emit` `输出`的文件。它们都遵循类似的结构：
+
+<!-- eslint-skip -->
+
+```js
+{
+  'chunkNames': [], // 该资源文件包含的 chunks
+  'chunks': [ 10, 6 ], // 该资源文件包含的 chunk ID
+  'comparedForEmit': false, // 指定是否对该资源文件和输出文件系统上相同文件进行比较
+  'emitted': true, // 是否指定该资源文件 emit 的输出目录
+  'name': '10.web.js', // 输出文件名
+  'size': 1058, // 文件大小（字节为单位）
+  'info': {
+    'immutable': true, // 指定 asset 是否可以长期缓存的标志位（包括哈希值）
+    'size': 1058, // 单位大小为字节，只有在 asset emitted 之后才可以使用
+    'development': true, // 指定 asset 是否只用于 development 环境，而不面向用户的标志位
+    'hotModuleReplacement': true, // 指定 asset 是否加载用于更新现有应用程序 (HMR) 的数据标志位
+    'sourceFilename': 'originalfile.js', // 从源文件创建资产时（可能转换）sourceFilename
+    'javascriptModule': true // 当 asset 是 javascript 和 ESM 时为 true
+  }
+}
+```
+
+T> 从 webpack v4.40.0 版本开始，Asset 的 `info` 属性可用
+
+### Chunk Objects {#chunk-objects}
+
+每个 `chunks` 对象代表一组名为 [chunk](/glossary/#c) 的模块。 每个对象都遵循如下结构：
+
+```js-with-links
+{
+  "entry": true, // 指定 webpack 运行时是否包含 chunk
+  "files": [
+    // 包含 chunk 的文件名字符数组
+  ],
+  "filteredModules": 0, // 查看关于 [top-level structure](#structure) 描述
+  "id": 0, // chunk 对应的 ID
+  "initial": true, // 指定chunk 是在页面初始化时加载还是[按需加载](/guides/lazy-loading)
+  "modules": [
+    // [module objects](#module-objects) 列表
+    "web.js?h=11593e3b3ac85436984a"
+  ],
+  "names": [
+    // 包含当前 chunk 的 chunk 名称列表
+  ],
+  "origins": [
+    // 查看后面的描述...
+  ],
+  "parents": [], // 父级 chunk ID
+  "rendered": true, // 指定 chunk 是否经过代码生成
+  "size": 188057 // chunk 大小，单位字节
+}
+```
+
+`chunks` 对象还包含一个 `origins` 列表，它描述来给定的 chunk 每个 `origins` 对象都遵循以下模式：
+
+```js-with-links
+{
+  "loc": "", // 生成当前 chunk 的代码行
+  "module": "(webpack)\\test\\browsertest\\lib\\index.web.js", // module的路径
+  "moduleId": 0, // module 对应的 ID
+  "moduleIdentifier": "(webpack)\\test\\browsertest\\lib\\index.web.js", // module 对应的路径
+  "moduleName": "./lib/index.web.js", // module对应的相对路径
+  "name": "main", // chunk 名称
+  "reasons": [
+    // 在 [module objects](#module-objects) 中找到相同的 `reason`列表
+  ]
+}
+```
+
+### Module Objects {#module-objects}
+
+假如不描述编译后的应用程序的实际模块，这些统计的数据有什么作用？其依赖关系图中的每个模块用如下结构表示：
+
+```js-with-links
+{
+  "assets": [
+    // [asset objects](#asset-objects) 列表
+  ],
+  "built": true, // 指定该模块经过 [Loaders](/concepts/loaders)、解析和代码生成 "cacheable": true 是否可以缓存
+  "chunks": [
+    // 当前模块包含的 chunk ID
+  ],
+  "errors": 0, // 解析或处理模块时的错误个数
+  "failed": false, // 当前模块编译是否失败
+  "id": 0, // 模块 ID (类似于 [`module.id`](/api/module-variables/#moduleid-commonjs))
+  "identifier": "(webpack)\\test\\browsertest\\lib\\index.web.js", // 内部使用的唯一 ID
+  "name": "./lib/index.web.js", // 实际文件的路径
+  "optional": false, // 对当前模块的所有请求都带上 `try... catch` blocks (与 ESM 无关)
+  "prefetched": false, // 指定模块是否被 [prefetched](/plugins/prefetch-plugin)
+  "profile": {
+    // 对应于 [`--profile` 标志位](/api/cli/#profiling) 的模块特定编译统计（以毫秒为单位）
+    "building": 73, // 加载和解析
+    "dependencies": 242, // 构建依赖
+    "factory": 11 // 解析依赖关系
+  },
+  "reasons": [
+    // 查看下面的描述...
+  ],
+  "size": 3593, // 预估模块大小，单位为字节
+  "source": "// 不要改变它...\r\nif(typeof...", // 字符串的原始源头
+  "warnings": 0 // 解析或处理模块时的警告数
+}
+```
+
+每个模块还包含了一个 `reasons` 列表，它描述了为什么该模块会被包含在依赖关系图中。每个 `reason` 都类似于上面的 [chunk objects](#chunk-objects) 章节的 `origins`：
+
+```js-with-links
+{
+  "loc": "33:24-93", // 当前模块包含的代码行数
+  "module": "./lib/index.web.js", // 基于 [context](/configuration/entry-context/#context) 的模块相对路径
+  "moduleId": 0, // 模块对应的 ID
+  "moduleIdentifier": "(webpack)\\test\\browsertest\\lib\\index.web.js", // 模块对应路径
+  "moduleName": "./lib/index.web.js", // 可读性更高的模块名称
+  "type": "require.context", // 使用的 [请求类型](/api/module-methods)
+  "userRequest": "../../cases" // 用于 `import` 或者 `require` 请求的原始字符串
+}
+```
+
+### Entry Objects {#entry-objects}
+
+```json
+"main": {
+  "name": "main",
+  "chunks": [
+    179
+  ],
+  "assets": [
+    {
+      "name": "main.js",
+      "size": 22
+    }
+  ],
+  "filteredAssets": 0,
+  "assetsSize": 22,
+  "auxiliaryAssets": [],
+  "filteredAuxiliaryAssets": 0,
+  "auxiliaryAssetsSize": 0,
+  "children": {},
+  "childAssets": {},
+  "isOverSizeLimit": false
+}
+```
+
+### Errors and Warnings {#errors-and-warnings}
+
+包含 `errors` and `warnings` 属性的一个对象列表。每个对象包含一条消息，一个堆栈跟踪信息和其他各种属性
+
+```json
+{
+  "moduleIdentifier": "C:\\Repos\\webpack\\test\\cases\\context\\issue-5750\\index.js",
+  "moduleName": "(webpack)/test/cases/context/issue-5750/index.js",
+  "loc": "3:8-47",
+  "message": "Critical dependency: Contexts can't use RegExps with the 'g' or 'y' flags.",
+  "moduleId": 29595,
+  "moduleTrace": [
+    {
+      "originIdentifier": "C:\\Repos\\webpack\\test\\cases|sync|/^\\.\\/[^/]+\\/[^/]+\\/index\\.js$/",
+      "originName": "(webpack)/test/cases sync ^\\.\\/[^/]+\\/[^/]+\\/index\\.js$",
+      "moduleIdentifier": "C:\\Repos\\webpack\\test\\cases\\context\\issue-5750\\index.js",
+      "moduleName": "(webpack)/test/cases/context/issue-5750/index.js",
+      "dependencies": [
+        {
+          "loc": "./context/issue-5750/index.js"
+        }
+      ],
+      "originId": 32582,
+      "moduleId": 29595
+    },
+    {
+      "originIdentifier": "C:\\Repos\\webpack\\testCases.js",
+      "originName": "(webpack)/testCases.js",
+      "moduleIdentifier": "C:\\Repos\\webpack\\test\\cases|sync|/^\\.\\/[^/]+\\/[^/]+\\/index\\.js$/",
+      "moduleName": "(webpack)/test/cases sync ^\\.\\/[^/]+\\/[^/]+\\/index\\.js$",
+      "dependencies": [
+        {
+          "loc": "1:0-70"
+        }
+      ],
+      "originId": 8198,
+      "moduleId": 32582
+    }
+  ],
+  "details": "at RequireContextDependency.getWarnings (C:\\Repos\\webpack\\lib\\dependencies\\ContextDependency.js:79:5)\n    at Compilation.reportDependencyErrorsAndWarnings (C:\\Repos\\webpack\\lib\\Compilation.js:1727:24)\n    at C:\\Repos\\webpack\\lib\\Compilation.js:1467:10\n    at _next2 (<anonymous>:16:1)\n    at eval (<anonymous>:42:1)\n    at C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2830:7\n    at Object.each (C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2850:39)\n    at C:\\Repos\\webpack\\lib\\FlagDependencyExportsPlugin.js:219:18\n    at C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2830:7\n    at Object.each (C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2850:39)\n    at C:\\Repos\\webpack\\lib\\FlagDependencyExportsPlugin.js:40:16\n    at Hook.eval [as callAsync] (<anonymous>:38:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\Repos\\tapable\\lib\\Hook.js:18:14)\n    at Compilation.finish (C:\\Repos\\webpack\\lib\\Compilation.js:1462:28)\n    at C:\\Repos\\webpack\\lib\\Compiler.js:909:18\n    at processTicksAndRejections (internal/process/task_queues.js:75:11)\n",
+  "stack": "ModuleDependencyWarning: Critical dependency: Contexts can't use RegExps with the 'g' or 'y' flags.\n    at Compilation.reportDependencyErrorsAndWarnings (C:\\Repos\\webpack\\lib\\Compilation.js:1732:23)\n    at C:\\Repos\\webpack\\lib\\Compilation.js:1467:10\n    at _next2 (<anonymous>:16:1)\n    at eval (<anonymous>:42:1)\n    at C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2830:7\n    at Object.each (C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2850:39)\n    at C:\\Repos\\webpack\\lib\\FlagDependencyExportsPlugin.js:219:18\n    at C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2830:7\n    at Object.each (C:\\Repos\\webpack\\node_modules\\neo-async\\async.js:2850:39)\n    at C:\\Repos\\webpack\\lib\\FlagDependencyExportsPlugin.js:40:16\n    at Hook.eval [as callAsync] (<anonymous>:38:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\Repos\\tapable\\lib\\Hook.js:18:14)\n    at Compilation.finish (C:\\Repos\\webpack\\lib\\Compilation.js:1462:28)\n    at C:\\Repos\\webpack\\lib\\Compiler.js:909:18\n    at processTicksAndRejections (internal/process/task_queues.js:75:11)\n"
+}
+```
+
+W> 注意，当 `errorStack: false` 传递给 `toJson` 方法时，堆栈跟踪信息会被删除。`errorStack` 选项默认设置为 `true`。
